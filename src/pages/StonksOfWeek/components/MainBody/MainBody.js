@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import Web3 from 'web3'
 import Spinner from 'react-spinkit';
+import { useWeb3React } from '@web3-react/core';
 
 import Button from 'components/Button/Button';
 import PageNavigation from 'components/PageNavigation/PageNavigation';
@@ -10,7 +11,7 @@ import styles from './MainBody.module.scss';
 
 const size = 10;
 
-export default function MainBody({account: address}) {
+export default function MainBody() {
   const [searchInput, setSearchInput] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,6 +21,8 @@ export default function MainBody({account: address}) {
   const [voteItem, setVoteItem] = useState({});
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const web3React = useWeb3React()
+  const { account: address } = web3React
 
   const getStocks = useCallback(() => {
     return new Promise((resolve, reject) => {
@@ -204,7 +207,7 @@ export default function MainBody({account: address}) {
   const getSearchArray = () => {
     return [firstItem, ...searchStocks].filter(each => each.id !== firstItem.id);
   }
-  console.log('firstItem', firstItem)
+
   return (
     <div className={styles.bodyMain}>
       {modalShow && <div className={styles.overlay} onClick={() => hideModal()} />}
@@ -217,7 +220,7 @@ export default function MainBody({account: address}) {
           A stonk of the week, voted by the community
         </div>
         <div className={styles.line}>
-          The DEUS Dao will conduct <span>{firstItem?.name}</span> and add liquidity for it to Uniswap.
+          The DEUS DAO Team will conduct <span>{firstItem?.name}</span> and open a Pool on Sushiswap and start an internal Liquidity Mining event.
         </div>
       </div>
       <div className={styles.mainContainer}>
