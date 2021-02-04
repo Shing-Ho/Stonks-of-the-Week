@@ -28,7 +28,7 @@ export default function RankItem({ voted, search, onVote, rank, last, item }) {
         </div>
       </div>
       <div className={styles.right}>
-        <div className={styles.voteText}>{item?.vote?.numberOfVotes} Votes <FormatVotes short={20} long={325} /></div>
+        <div className={styles.voteText}>{item?.vote?.numberOfVotes} Votes <FormatVotes short={item?.vote?.votesShort} long={item?.vote?.votesLong} /></div>
         {
           item?.vote?.closed === false ? (
             <TwoButton leftClick={() => onVote(item.id)} rightClick={() => onVote(item.id)} size="small" leftText="SHORT" rightText="LONG" />
@@ -55,7 +55,7 @@ export default function RankItem({ voted, search, onVote, rank, last, item }) {
       <div className={styles.mobileRight}>
         {
           item?.vote?.closed === false ? (
-            <TwoButton leftClick={() => onVote(item.id)} rightClick={() => onVote(item.id)} size="small" leftText="SHORT" rightText="LONG" />
+            <TwoButton leftClick={() => onVote(item.id, 'short')} rightClick={() => onVote(item.id, 'long')} size="small" leftText="SHORT" rightText="LONG" />
           ) : search ? (<span className={styles.alreadyConducted}>Closed</span>) : null
         }
         <div className={styles.voteText}>{item?.vote?.numberOfVotes} Votes <FormatVotes short={20} long={325} /></div>

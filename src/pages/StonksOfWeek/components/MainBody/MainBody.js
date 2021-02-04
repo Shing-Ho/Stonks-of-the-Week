@@ -136,16 +136,16 @@ export default function MainBody() {
     setModalShow(false);
   }
 
-  const onVote = async (item) => {
+  const onVote = async (item, period) => {
     if(!address) {
       alert('Please install metamask on your browser');
       return
     }
-    if(!voteItem.id) {
+    if(!voteItem?.stock?.id) {
       setLoading(true);
       const apiUrl = 'https://weeklystocks-api.herokuapp.com/wallets/'+address+'/stocks/'+item.id.toString()+'/votes';
       const web3 = new Web3(Web3.givenProvider || 'http://localhost:8080')
-      const signature = await web3.eth.personal.sign(item.ticker.toString(), address)
+      const signature = await web3.eth.personal.sign(period + ' ' + item.ticker.toString(), address)
       fetch(apiUrl, {
         method: 'PUT',
         headers: {
@@ -155,7 +155,7 @@ export default function MainBody() {
         },
         body: JSON.stringify({
           address: address,
-          message: item.ticker.toString(),
+          message: period + ' ' + item.ticker.toString(),
           signature: signature,
           version: "2"
         })
@@ -177,9 +177,9 @@ export default function MainBody() {
 
   const retractVote = async () => {
     setLoading(true);
-    const apiUrl = 'https://weeklystocks-api.herokuapp.com/wallets/'+address+'/stocks/'+voteItem.id.toString()+'/votes';
+    const apiUrl = 'https://weeklystocks-api.herokuapp.com/wallets/'+address+'/stocks/'+voteItem?.stock?.id.toString()+'/votes';
     const web3 = new Web3(Web3.givenProvider || 'http://localhost:8080')
-    const signature = await web3.eth.personal.sign(voteItem.ticker.toString(), address)
+    const signature = await web3.eth.personal.sign(voteItem?.stock?.ticker.toString(), address)
     fetch(apiUrl, {
       method: 'DELETE',
       headers: {
@@ -189,7 +189,7 @@ export default function MainBody() {
       },
       body: JSON.stringify({
         address: address,
-        message: voteItem.ticker.toString(),
+        message: voteItem?.stock?.ticker.toString(),
         signature: signature,
         version: "2"
       })
@@ -209,7 +209,7 @@ export default function MainBody() {
   const getSearchArray = () => {
     return [firstItem, ...searchStocks].filter(each => each.id !== firstItem.id);
   }
-
+  console.log('voteItem', voteItem)
   return (
     <div className={styles.bodyMain}>
       {modalShow && <div className={styles.overlay} onClick={() => hideModal()} />}
@@ -227,9 +227,9 @@ export default function MainBody() {
       </div>
       <div className={styles.mainContainer}>
         {
-          voteItem?.id ? (
+          voteItem?.stock?.id ? (
             <div className={styles.votted}>
-              <div className={styles.vottedText}>You have voted for {voteItem.name}</div>
+              <div className={styles.vottedText}>You have voted for {voteItem?.stock?.name}</div>
               <Button size="long" text="RETRACT VOTE" handleClick={retractVote} />
             </div>
           ) : null
@@ -252,9 +252,9 @@ export default function MainBody() {
                     return (
                       <RankItem
                         search
-                        voted={item.id === voteItem.id}
+                        voted={item.id === voteItem?.stock?.id}
                         key={item.id}
-                        onVote={() => onVote(item)}
+                        onVote={onVote}
                         item={item}
                         rank={1 + index}
                         last={index === getSearchArray().length - 1}
@@ -273,14 +273,14 @@ export default function MainBody() {
             <div className={styles.firstRankText}>#1</div>
             <div className={styles.itemName}>{firstItem.ticker}</div>
             <div className={styles.itemDescription}>{firstItem.name}</div>
-            <TwoButton leftClick={() => onVote(firstItem)} rightClick={() => onVote(firstItem)} size="big" leftText="SHORT" rightText="LONG" />
-            <div className={styles.details}>{firstItem?.vote?.numberOfVotes} <FormatVotes short={20} long={325} /> – {firstItem?.vote?.percentageShare}%</div>
+            <TwoButton leftClick={() => onVote(firstItem, 'short')} rightClick={() => onVote(firstItem, 'long')} size="big" leftText="SHORT" rightText="LONG" />
+            <div className={styles.details}>{firstItem?.vote?.numberOfVotes} <FormatVotes short={firstItem?.vote?.votesShort} long={firstItem?.vote?.votesLong} /> – {firstItem?.vote?.percentageShare}%</div>
           </div>
         ) : null}
         <div className={styles.otherRanks}>
           {
             stocks && stocks.map((stock, index) => (
-              <RankItem onVote={() => onVote(stock)} key={stock?.vote?.id} rank={(currentPage - 1) * size + 2 + index} item={stock} last={index === (size - 1)} />
+              <RankItem onVote={onVote} key={stock?.vote?.id} rank={(currentPage - 1) * size + 2 + index} item={stock} last={index === (size - 1)} />
             ))
           }
         </div>
