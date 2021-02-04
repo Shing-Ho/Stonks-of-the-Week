@@ -10,41 +10,41 @@ const navs = [
           {
               id: "swap",
               text: "SWAP",
-              path: "/swap",
+              path: "https://app.deus.finance/swap",
               exact: true,
 
           },
           {
               id: "synthetics",
               text: <span>SYNTHETICS</span>,
-              path: "/synchronizer",
+              path: "https://app.deus.finance/synchronizer",
               exact: true,
           },
           {
               id: "coinbase",
               text: "COINBASE",
-              path: "/coinbase",
+              path: "https://app.deus.finance/coinbase",
               exact: true,
 
           },
           {
               id: "bakkt",
               text: "BAKKT",
-              path: "/bakkt",
+              path: "https://app.deus.finance/bakkt",
               exact: true,
 
           },
           {
               id: "staking",
               text: "STAKING",
-              path: "/staking",
+              path: "https://app.deus.finance/staking",
               exact: false,
           },
 
           {
               id: "vaults",
               text: "VAULTS",
-              path: "/vaults",
+              path: "https://app.deus.finance/vaults",
               exact: true,
           },
       ]

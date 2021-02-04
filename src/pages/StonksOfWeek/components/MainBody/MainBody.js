@@ -4,7 +4,9 @@ import Spinner from 'react-spinkit';
 import { useWeb3React } from '@web3-react/core';
 
 import Button from 'components/Button/Button';
+import TwoButton from 'components/TwoButton/TwoButton';
 import PageNavigation from 'components/PageNavigation/PageNavigation';
+import FormatVotes from 'components/FormatVotes/FormatVotes';
 import { ReactComponent as StonksIcon } from 'icons/STONKS.svg';
 import RankItem from '../RankItem/RankItem';
 import styles from './MainBody.module.scss';
@@ -271,8 +273,8 @@ export default function MainBody() {
             <div className={styles.firstRankText}>#1</div>
             <div className={styles.itemName}>{firstItem.ticker}</div>
             <div className={styles.itemDescription}>{firstItem.name}</div>
-            <Button handleClick={() => onVote(firstItem)} size="big" text="VOTE" />
-            <div className={styles.details}>{firstItem?.vote?.numberOfVotes} Votes so far – {firstItem?.vote?.percentageShare}%</div>
+            <TwoButton leftClick={() => onVote(firstItem)} rightClick={() => onVote(firstItem)} size="big" leftText="SHORT" rightText="LONG" />
+            <div className={styles.details}>{firstItem?.vote?.numberOfVotes} <FormatVotes short={20} long={325} /> – {firstItem?.vote?.percentageShare}%</div>
           </div>
         ) : null}
         <div className={styles.otherRanks}>
