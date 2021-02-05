@@ -143,7 +143,7 @@ export default function MainBody() {
     }
     if(!voteItem?.stock?.id) {
       setLoading(true);
-      const apiUrl = 'https://weeklystocks-api.herokuapp.com/wallets/'+address+'/stocks/'+item.id.toString()+'/votes';
+      const apiUrl = 'https://weeklystocks-api.herokuapp.com/wallets/'+address+'/stocks/'+item?.stock?.id.toString()+'/votes';
       const web3 = new Web3(Web3.givenProvider || 'http://localhost:8080')
       const signature = await web3.eth.personal.sign(period + ' ' + item.ticker.toString(), address)
       fetch(apiUrl, {
@@ -207,7 +207,7 @@ export default function MainBody() {
   }
 
   const getSearchArray = () => {
-    return [firstItem, ...searchStocks].filter(each => each.id !== firstItem.id);
+    return [firstItem, ...searchStocks].filter(each => each?.stock?.id !== firstItem?.stock?.id);
   }
   console.log('voteItem', voteItem)
   return (
@@ -252,8 +252,8 @@ export default function MainBody() {
                     return (
                       <RankItem
                         search
-                        voted={item.id === voteItem?.stock?.id}
-                        key={item.id}
+                        voted={item?.stock?.id === voteItem?.stock?.id}
+                        key={item?.stock?.id}
                         onVote={onVote}
                         item={item}
                         rank={1 + index}
